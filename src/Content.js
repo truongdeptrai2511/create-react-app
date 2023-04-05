@@ -34,7 +34,8 @@ function Content(){
     // - Callback sẽ được gọi lại khi deps được thay đổi
     //---------------
     // 1. Callback luôn được gọi sau khi Component mounted
-    
+    // 2. Cleanup function luôn được gọi khi component unmounted
+
     const [title, setTitle] = useState('')
     const [posts, setPosts] = useState([])
     const [type, setType] = useState('posts')
@@ -44,6 +45,31 @@ function Content(){
       .then(posts => setPosts(posts))
     },[type])
 
+    const [showGoToTop, setShowGoToTop] = useState(false)
+    useEffect(() => {
+        const handleScroll = () => {
+            console.log(window.scrollY)
+            if (window.scrollY >= 200) {
+                setShowGoToTop(true)
+            }
+            else {
+                setShowGoToTop(false)
+            }
+        }
+        const handleResize = () => {
+            console.log('resize')
+        }
+        window.addEventListener('scroll', handleScroll)
+        window.addEventListener('resize', handleResize)
+        
+        // Cleanup function luôn được gọi khi component unmounted
+        return () => {
+            {console.log('cleanup')}
+            window.removeEventListener('scroll', handleScroll)
+            window.removeEventListener('resize', handleResize)
+        }
+    },[])
+
     return(
         <div>
             <div>
@@ -51,6 +77,7 @@ function Content(){
                         <button 
                             style={type === tab ? {
                                 backgroundColor: 'blue',
+                                color: 'white'
                             } : {}}
                             key={tab} 
                             onClick={() => 
@@ -67,6 +94,19 @@ function Content(){
                     <li key={post.id}>
                         {post.title||post.name}
                     </li>)}
+                    {showGoToTop && (
+                        <button
+                        style={{
+                            position: 'fixed',
+                            right: 20,
+                            bottom: 20
+                        }}
+                        onClick={() => 
+                        setType('posts')}
+                    >
+                        Go to top
+                    </button>
+                    )}
                 </ul>
                 
         </div>
