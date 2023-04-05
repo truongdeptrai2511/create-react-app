@@ -46,20 +46,20 @@ import {useState} from 'react'
 // }
 //#endregion
 //#region Radio Button
-const courses = [
-  {
-    id: 1,
-    name: 'HTML'
-  },
-  {
-    id: 2,
-    name: 'CSS'
-  },
-  {
-    id: 3,
-    name: 'JavaScript'
-  }
-]
+// const courses = [
+//   {
+//     id: 1,
+//     name: 'HTML'
+//   },
+//   {
+//     id: 2,
+//     name: 'CSS'
+//   },
+//   {
+//     id: 3,
+//     name: 'JavaScript'
+//   }
+// ]
 // function App(){
 //   const [checked, setChecked] = useState(1)
 //   console.log(checked)
@@ -85,34 +85,35 @@ const courses = [
 //#endregion
 //#region Checkbox
 function App(){
-  const [checked, setChecked] = useState([])
-  const handleChecked = (id) => {
-    setChecked(prev => {
-      const isChecked = prev.includes(id)
-      if(isChecked){
-        return prev.filter(item => item !== id)
-      }else{
-        return [...prev, id]
-      }
-    })
-  }
+  const storageJobs = JSON.parse(localStorage.getItem('jobs'))
+
+  const [job, setJob] = useState('')
+  const [jobs, setJobs] = useState(storageJobs ?? [])
   const handleSubmit = () => {
-    //call API
-    console.log({ids: checked})
+    setJobs(prev => {
+      const newJobs = [...prev, job]
+      // Save to localStorage
+      const jsonJobs = JSON.stringify(newJobs)
+      localStorage.setItem('jobs', jsonJobs)
+      return newJobs
+    })
+    setJob('')
   }
   return (
     <div className="App" style={{padding:30}}>
-      {courses.map(course => (
-        <div key={course.id}>
-          <input 
-            type='checkbox'
-            checked={checked.includes(course.id)}
-            onChange={() => handleChecked(course.id)}
-          />
-          {course.name}
-        </div>
-      ))}
+      <input 
+        value={job}
+        onChange={e => setJob(e.target.value)}
+      />
       <button onClick={handleSubmit}>Submit</button>
+      <ul>
+         {console.log(jobs)}
+          {jobs.map((job,index) => (
+            <li key={index}>
+              {job}
+            </li>
+          ))}
+      </ul>
     </div>
   )}
 //#endregion
