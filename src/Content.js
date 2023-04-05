@@ -34,19 +34,32 @@ function Content(){
     // - Callback sẽ được gọi lại khi deps được thay đổi
     //---------------
     // 1. Callback luôn được gọi sau khi Component mounted
-    // 2. Cleanup function luôn được gọi khi component unmounted
-    const [countdown, setCountdown] = useState(180)
+    // 2. Cleanup function luôn được gọi trước khi component unmounted
+    // 3. Cleanup funtion luôn được gọi trước khi callback được gọi(trừ lần muonted)
+
+    const [avatar , setAvatar] = useState()
 
     useEffect(() => {
-            setTimeout(() => {
-            setCountdown(countdown - 1)
-        }, 1000)
-        console.log(countdown)
-    }, [countdown])
+        //cleanup
+        return () => {
+            avatar && URL.revokeObjectURL(avatar.preview)
+        }
+    })
+
+    const handlePreviewAvatar = (e) => {
+        const file = e.target.files[0]
+        file.preview = URL.createObjectURL(file)
+        setAvatar(file)
+    }
 
     return(
         <div>
-            <h1>{countdown}</h1>
+            <input
+                type="file"
+                //multiple : chon nhieu anh
+                onChange={handlePreviewAvatar}
+            />
+            {avatar && <img src={avatar.preview} alt="" width={200}/>}
         </div>
     )
 }
