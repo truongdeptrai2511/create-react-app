@@ -1,4 +1,4 @@
-import { useEffect, useState, useLayoutEffect} from "react"
+import { useEffect, useState, useLayoutEffect, useRef} from "react"
 // useEffect được sử dụng khi cần Side effects
 // Cần nắm vững: 
 // Events: Add / remove  event listeners
@@ -25,32 +25,31 @@ import { useEffect, useState, useLayoutEffect} from "react"
 
 
 function Content(){
-    // 1. useEffect(callback)
-    // - gọi callback mỗi khi component re-render
-    // - gọi callback sau khi component thêm element vào DOM
-    // 2. useEffect(callback, [])
-    // - Chỉ gọi callback 1 lần sau khi component được mounted
-    // 3. useEffect(callback, [deps])
-    // - Callback sẽ được gọi lại khi deps được thay đổi
-    //---------------
-    // 1. Callback luôn được gọi sau khi Component mounted
-    // 2. Cleanup function luôn được gọi trước khi component unmounted
-    // 3. Cleanup funtion luôn được gọi trước khi callback được gọi(trừ lần muonted)
-    const [count, setCount] = useState(0)
-    
-    useLayoutEffect(() => {
-        if(count > 3)
-            setCount(0)
+    const [count, setCount] = useState(60)
 
+    let timerId = useRef()
+    const prevCount = useRef()
+
+    useEffect(() => {
+        prevCount.current = count
     }, [count])
 
-    const handleRun = () => {
-        setCount(count + 1)
+    const handleStart = () => {
+        timerId.current = setInterval(() => {
+            setCount(prevCount => prevCount - 1)
+        }, 1000)
+        console.log('start -> ', timerId.current)
     }
+    const handleStop = () => {
+        clearInterval(timerId.current)
 
+        console.log('stop -> ', timerId.current)
+    }
+    
     return (
         <div>
-            <button onClick={handleRun}>Run</button>
+            <button onClick={handleStart}>Start</button>
+            <button onClick={handleStop}>Stop</button>
             <h1>{count}</h1>
         </div>
     )
