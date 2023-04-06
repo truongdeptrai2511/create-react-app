@@ -24,6 +24,21 @@ import { useState } from "react"
  *  - Clear timer
  */
 
+const lessons = [
+    {
+        id: 1,
+        name: "CSS",
+    },
+    {
+        id: 2,
+        name: "HTML",
+    },
+    {
+        id: 3,
+        name: "JS",
+    }
+]
+
 function Content(){
     // 1. useEffect(callback)
     // - gọi callback mỗi khi component re-render
@@ -36,30 +51,32 @@ function Content(){
     // 1. Callback luôn được gọi sau khi Component mounted
     // 2. Cleanup function luôn được gọi trước khi component unmounted
     // 3. Cleanup funtion luôn được gọi trước khi callback được gọi(trừ lần muonted)
-
-    const [avatar , setAvatar] = useState()
-
+    const [lessonId, setLessonId] = useState(1)
+    
     useEffect(() => {
-        //cleanup
-        return () => {
-            avatar && URL.revokeObjectURL(avatar.preview)
+        const handleComment = ({detail}) => {
+            console.log({detail})
         }
-    })
-
-    const handlePreviewAvatar = (e) => {
-        const file = e.target.files[0]
-        file.preview = URL.createObjectURL(file)
-        setAvatar(file)
-    }
+        window.addEventListener(`lesson-${lessonId}`, handleComment)
+        return () => {
+            window.removeEventListener(`lesson-${lessonId}`, handleComment)
+        }
+    },[lessonId])
 
     return(
         <div>
-            <input
-                type="file"
-                //multiple : chon nhieu anh
-                onChange={handlePreviewAvatar}
-            />
-            {avatar && <img src={avatar.preview} alt="" width={200}/>}
+            <ul>
+                {lessons.map(lesson => (
+                    <li key={lesson.id}
+                        style={{
+                            color: lessonId === lesson.id ? "red" : "black",
+                        }}
+                        onClick={() => setLessonId(lesson.id)}
+                    >
+                        {lesson.name}
+                    </li>
+                ))}
+            </ul>
         </div>
     )
 }

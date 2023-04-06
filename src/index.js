@@ -4,6 +4,17 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+function emitComment(id) {
+
+  setInterval(() => {
+    window.dispatchEvent(new CustomEvent(`lesson-${id}`, {
+      detail: `Content comment of lesson ${id}`,
+    }))
+  }, 2000)// sau 2 giay thi se bawns mot su kien ow pham vi global
+}
+emitComment(1)
+emitComment(2)
+emitComment(3)
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
