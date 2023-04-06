@@ -1,5 +1,4 @@
-import { useEffect } from "react"
-import { useState } from "react"
+import { useEffect, useState, useLayoutEffect} from "react"
 // useEffect được sử dụng khi cần Side effects
 // Cần nắm vững: 
 // Events: Add / remove  event listeners
@@ -24,20 +23,6 @@ import { useState } from "react"
  *  - Clear timer
  */
 
-const lessons = [
-    {
-        id: 1,
-        name: "CSS",
-    },
-    {
-        id: 2,
-        name: "HTML",
-    },
-    {
-        id: 3,
-        name: "JS",
-    }
-]
 
 function Content(){
     // 1. useEffect(callback)
@@ -51,32 +36,22 @@ function Content(){
     // 1. Callback luôn được gọi sau khi Component mounted
     // 2. Cleanup function luôn được gọi trước khi component unmounted
     // 3. Cleanup funtion luôn được gọi trước khi callback được gọi(trừ lần muonted)
-    const [lessonId, setLessonId] = useState(1)
+    const [count, setCount] = useState(0)
     
-    useEffect(() => {
-        const handleComment = ({detail}) => {
-            console.log({detail})
-        }
-        window.addEventListener(`lesson-${lessonId}`, handleComment)
-        return () => {
-            window.removeEventListener(`lesson-${lessonId}`, handleComment)
-        }
-    },[lessonId])
+    useLayoutEffect(() => {
+        if(count > 3)
+            setCount(0)
 
-    return(
+    }, [count])
+
+    const handleRun = () => {
+        setCount(count + 1)
+    }
+
+    return (
         <div>
-            <ul>
-                {lessons.map(lesson => (
-                    <li key={lesson.id}
-                        style={{
-                            color: lessonId === lesson.id ? "red" : "black",
-                        }}
-                        onClick={() => setLessonId(lesson.id)}
-                    >
-                        {lesson.name}
-                    </li>
-                ))}
-            </ul>
+            <button onClick={handleRun}>Run</button>
+            <h1>{count}</h1>
         </div>
     )
 }
