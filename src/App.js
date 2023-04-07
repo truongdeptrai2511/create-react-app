@@ -1,23 +1,18 @@
 import './App.css'
-import Content from './Content'
-import {useReducer, useRef, useState, createContext, useContext} from 'react'
-import {ThemeContext} from './ThemeContext'
-// context
-// CompA => CompB => CompC
+import { useStore, actions } from './store';
 
-// 1. Create context: tao ra pham vi nhan du lieu
-// 2. Provider: cung cap du lieu
-// 3. Consumer: nhan du lieu
-
-
-console.log('ThemeContext:', ThemeContext)
 
 function App(){
-  const context = useContext(ThemeContext)
+
+  const [state, dispatch] = useStore()
+  const { todos, todoInput } = state
     return (
         <div className="App">
-            <button onClick={context.toggleTheme}>Toggle Themes</button>
-            <Content/>
+            <input 
+              value={todoInput}
+              placeholder='Enter a todo...'
+              onChange={(e) => dispatch(actions.setTodoInput(e.target.value))}
+            />
         </div>
     )
   }

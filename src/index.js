@@ -3,24 +3,15 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import {ThemeProvider} from './ThemeContext'
-function emitComment(id) {
+import { Provider } from './store/Provider';
+import { StoreProvider } from './store/Provider';
 
-  setInterval(() => {
-    window.dispatchEvent(new CustomEvent(`lesson-${id}`, {
-      detail: `Content comment of lesson ${id}`,
-    }))
-  }, 2000)// sau 2 giay thi se bawns mot su kien ow pham vi global
-}
-emitComment(1)
-emitComment(2)
-emitComment(3)
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <ThemeProvider>
-      <App />
-    </ThemeProvider>
+      <StoreProvider>
+        <App />
+      </StoreProvider>
   </React.StrictMode>
 );
 
