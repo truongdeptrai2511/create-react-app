@@ -1,18 +1,12 @@
 import React, { useEffect, useState, useLayoutEffect, useRef, memo} from "react"
-// 1. memo() -> higher order component  (hoc)
-// 2. useCallBack()
-
-//Hooks
-//HOC
-// Render props
-
-function Content(){
+import Paragraph from "./Paragraph"
+function Content({theme}){
     
     return (
         <div>
-            <h1>Hello Content!</h1>
+            <h1><Paragraph theme={theme}/></h1>
         </div>
     )
 }
 
-export default memo(Content)
+export default Content
